@@ -82,6 +82,14 @@ public class RelayClient implements Runnable {
                     System.out.println("Receiving file "+ filename + " size : " + fileSize + " bytes");
 
                     receiveFile(fileSize, filename);
+                }else if(cmd.startsWith("NEW_CLIENT")) {
+                    String[] parts = cmd.split(" ");
+                    String clientId = parts[1];
+                    System.out.println("New client connected to server : " + clientId);
+                }else if(cmd.startsWith("CLIENT")) {
+                    String[] parts = cmd.split(" ");
+                    String clientId = parts[1];
+                    System.out.println("Available client: " + clientId);
                 }
             }
             catch (IOException e) {

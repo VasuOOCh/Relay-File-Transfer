@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -32,6 +33,22 @@ public class RelayServer {
 
                 // Send Client its client ID
                 connectionHandler.sendMessage("ID: " + clientId);
+
+                // inform the other clients about new connection :
+                for (Map.Entry<String, ConnectionHandler> set : clients.entrySet()) {
+                    if(!Objects.equals(set.getKey(), clientId)) {
+                        ConnectionHandler c = set.getValue();
+                        c.sendMessage("NEW_CLIENT "+ clientId);
+                    }
+                }
+
+                // informing the newly connected client about all other existing connections
+                for (Map.Entry<String, ConnectionHandler> set : clients.entrySet()) {
+                    if(!Objects.equals(set.getKey(), clientId)) {
+                        connectionHandler.sendMessage("CLIENT " + set.getKey());
+                    }
+                }
+                System.out.println("Informed the other clients");
 
                 // What is connectionHandler : It is a class for creating objects for individual
                 // clients to handle them and also a runnable for a thread, which will be initialized for
